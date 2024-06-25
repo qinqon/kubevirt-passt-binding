@@ -5,6 +5,7 @@ sidecar_image_sha=$(skopeo inspect docker://$sidecar_image | jq -r .Digest)
 kubectl patch kubevirts -n kubevirt kubevirt --type=json -p="[{\"op\": \"add\", \"path\": \"/spec/configuration/network\",   \"value\": {
       \"binding\": {
           \"passt\": {
+              \"networkAttachmentDefinition\": \"netbindingpasst\",
               \"sidecarImage\": \"${sidecar_image}@${sidecar_image_sha}\",
               \"migration\": {
                   \"method\": \"link-refresh\"
