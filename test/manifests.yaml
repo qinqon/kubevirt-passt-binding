@@ -1,0 +1,93 @@
+---
+apiVersion: v1                                                  
+kind: Namespace
+metadata:                                                                       
+  name: passt-poc
+---
+apiVersion: k8s.cni.cncf.io/v1                                                  
+kind: NetworkAttachmentDefinition                                               
+metadata:                                                                       
+  namespace: passt-poc
+  name: netbindingpasst
+spec:                                                                           
+  config: |2                                                                    
+    {                                                                           
+            "cniVersion": "1.0.0",                                              
+            "name": "net-binding-passt",
+            "plugins": [ 
+              {
+                "type": "kubevirt-passt-binding"
+              }
+             ]
+    }                               
+---
+apiVersion: k8s.cni.cncf.io/v1                                                  
+kind: NetworkAttachmentDefinition                                               
+metadata:                                                                       
+  namespace: passt-poc
+  name: ovn-layer2
+spec:                                                                           
+  config: |2                                                                    
+    {                                                                           
+            "cniVersion": "1.0.0",                                              
+            "name": "net-ovn-layer2",
+            "type": "ovn-k8s-cni-overlay",                                      
+            "topology":"layer2",                                                
+            "subnets": "10.100.200.0/24",                                       
+            "mtu": 1300,                                                        
+            "primaryNetwork": true,
+            "netAttachDefName": "passt-poc/ovn-layer2",                               
+            "excludeSubnets": "10.100.200.0/29"                                 
+    }                               
+---
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  labels:
+    kubevirt.io/vm: vm-net-binding-passt
+  name: vm-net-binding-passt
+  namespace: passt-poc
+spec:
+  running: true
+  template:
+    metadata:
+      labels:
+        kubevirt.io/vm: vm-net-binding-passt
+    spec:
+      domain:
+        devices:
+          disks:
+          - disk:
+              bus: virtio
+            name: containerdisk
+          - disk:
+              bus: virtio
+            name: cloudinitdisk
+          interfaces:
+          - name: passtnet
+            binding:
+              name: passt
+            ports:
+            - name: http
+              port: 80
+              protocol: TCP
+          rng: {}
+        resources:
+          requests:
+            memory: 1024M
+      networks:
+      - name: passtnet
+        multus:
+          networkName: netbindingpasst
+      terminationGracePeriodSeconds: 0
+      volumes:
+      - containerDisk:
+          image: quay.io/kubevirt/fedora-with-test-tooling-container-disk:v1.1.0
+        name: containerdisk
+      - cloudInitNoCloud:
+          networkData: |
+            version: 2
+            ethernets:
+              eth0:
+                dhcp4: true
+        name: cloudinitdisk
