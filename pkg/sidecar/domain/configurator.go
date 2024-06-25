@@ -54,12 +54,10 @@ const (
 )
 
 func NewPasstNetworkConfigurator(ifaces []vmschema.Interface, networks []vmschema.Network, opts NetworkConfiguratorOptions) (*PasstNetworkConfigurator, error) {
-	multusNetworks := vmispec.FilterMultusNonDefaultNetworks(networks)
-	if len(multusNetworks) == 0 {
-		return nil, fmt.Errorf("multus networks not found")
+	network := vmispec.LookupPodNetwork(networks)
+	if network == nil {
+		return nil, fmt.Errorf("pod network not found")
 	}
-	// TODO: Support more than one
-	network := multusNetworks[0]
 	iface := vmispec.LookupInterfaceByName(ifaces, network.Name)
 	if iface == nil {
 		return nil, fmt.Errorf("no interface found")
