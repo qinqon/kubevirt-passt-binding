@@ -36,7 +36,7 @@ import (
 
 const (
 	// TODO: Discover the default gw interface
-	primaryPodInterfaceName = "snd1"
+	primaryPodInterfaceName = "sdn1"
 
 	virtLauncherUserID = 107
 )

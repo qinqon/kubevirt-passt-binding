@@ -9,6 +9,7 @@ require (
 	github.com/onsi/gomega v1.33.1
 	github.com/vishvananda/netlink v1.1.1-0.20210330154013-f5de75959ad5
 	google.golang.org/grpc v1.56.3
+	k8s.io/client-go v12.0.0+incompatible
 	kubevirt.io/api v1.2.2
 	kubevirt.io/client-go v1.2.2
 	kubevirt.io/kubevirt v1.2.2
