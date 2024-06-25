@@ -3,8 +3,11 @@ module github.com/qinqon/kubevirt-passt-binding
 go 1.22.3
 
 require (
+	github.com/containernetworking/cni v1.1.2
+	github.com/containernetworking/plugins v1.1.1
 	github.com/onsi/ginkgo/v2 v2.19.0
 	github.com/onsi/gomega v1.33.1
+	github.com/vishvananda/netlink v1.1.1-0.20210330154013-f5de75959ad5
 	google.golang.org/grpc v1.56.3
 	kubevirt.io/api v1.2.2
 	kubevirt.io/client-go v1.2.2
@@ -32,6 +35,7 @@ require (
 	github.com/openshift/api v0.0.0 // indirect
 	github.com/openshift/custom-resource-status v1.1.2 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/vishvananda/netns v0.0.0-20210104183010-2eb08e3e575f // indirect
 	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
 	golang.org/x/text v0.15.0 // indirect

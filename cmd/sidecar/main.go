@@ -32,12 +32,13 @@ import (
 	hooksInfo "kubevirt.io/kubevirt/pkg/hooks/info"
 	hooksV1alpha3 "kubevirt.io/kubevirt/pkg/hooks/v1alpha3"
 
-	srv "kubevirt.io/kubevirt/cmd/sidecars/network-passt-binding/server"
+	srv "github.com/qinqon/kubevirt-passt-binding/pkg/sidecar/server"
 )
 
 const hookSocket = "passt.sock"
 
 func main() {
+	log.Log.Infof("KubeVirt network passt binding to support primary networks")
 	socketPath := filepath.Join(hooks.HookSocketsSharedDirectory, hookSocket)
 	socket, err := net.Listen("unix", socketPath)
 	if err != nil {

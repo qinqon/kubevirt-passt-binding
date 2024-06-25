@@ -24,7 +24,7 @@ import (
 	. "github.com/onsi/gomega"
 	vmschema "kubevirt.io/api/core/v1"
 
-	"kubevirt.io/kubevirt/cmd/sidecars/network-passt-binding/domain"
+	"github.com/qinqon/kubevirt-passt-binding/pkg/sidecar/domain"
 
 	domainschema "kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/api"
 )

@@ -35,8 +35,8 @@ import (
 
 	"kubevirt.io/client-go/log"
 
-	"kubevirt.io/kubevirt/cmd/sidecars/network-passt-binding/callback"
-	"kubevirt.io/kubevirt/cmd/sidecars/network-passt-binding/domain"
+	"github.com/qinqon/kubevirt-passt-binding/pkg/sidecar/callback"
+	"github.com/qinqon/kubevirt-passt-binding/pkg/sidecar/domain"
 
 	hooksInfo "kubevirt.io/kubevirt/pkg/hooks/info"
 	hooksV1alpha3 "kubevirt.io/kubevirt/pkg/hooks/v1alpha3"

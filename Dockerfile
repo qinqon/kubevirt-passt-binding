@@ -4,7 +4,7 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN --mount=type=cache,target="/root/.cache/go-build" CGO_ENABLED=0 GOOS=linux go build -o network-passt-binding-sidecar ./cmd/network-passt-binding-sidecar
+RUN --mount=type=cache,target="/root/.cache/go-build" CGO_ENABLED=0 GOOS=linux go build -o network-passt-binding-sidecar ./cmd/sidecar
 
 # Final stage
 FROM registry.access.redhat.com/ubi9/ubi-minimal:9.3

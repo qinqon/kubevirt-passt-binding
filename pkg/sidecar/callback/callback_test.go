@@ -23,7 +23,7 @@ import (
 	"encoding/xml"
 	"fmt"
 
-	"kubevirt.io/kubevirt/cmd/sidecars/network-passt-binding/callback"
+	"github.com/qinqon/kubevirt-passt-binding/pkg/sidecar/callback"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
