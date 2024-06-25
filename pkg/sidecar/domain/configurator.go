@@ -32,7 +32,6 @@ import (
 	"kubevirt.io/kubevirt/pkg/network/istio"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device"
 
-	"kubevirt.io/kubevirt/pkg/network/namescheme"
 	"kubevirt.io/kubevirt/pkg/network/vmispec"
 )
 
@@ -144,6 +143,8 @@ func (p PasstNetworkConfigurator) generateInterface() (*domainschema.Interface, 
 	const (
 		ifaceTypeUser     = "user"
 		ifaceBackendPasst = "passt"
+		//TODO: We should discover it
+		device = "sdn1"
 	)
 	return &domainschema.Interface{
 		Alias:       domainschema.NewUserDefinedAlias(p.vmiSpecIface.Name),
@@ -152,7 +153,7 @@ func (p PasstNetworkConfigurator) generateInterface() (*domainschema.Interface, 
 		MAC:         mac,
 		ACPI:        acpi,
 		Type:        ifaceTypeUser,
-		Source:      domainschema.InterfaceSource{Device: namescheme.PrimaryPodInterfaceName},
+		Source:      domainschema.InterfaceSource{Device: device},
 		Backend:     &domainschema.InterfaceBackend{Type: ifaceBackendPasst, LogFile: PasstLogFilePath},
 		PortForward: p.generatePortForward(),
 	}, nil
