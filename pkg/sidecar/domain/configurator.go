@@ -23,6 +23,8 @@ import (
 	"fmt"
 	"strings"
 
+	vishnetlink "github.com/vishvananda/netlink"
+
 	vmschema "kubevirt.io/api/core/v1"
 
 	domainschema "kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/api"
@@ -33,6 +35,8 @@ import (
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device"
 
 	"kubevirt.io/kubevirt/pkg/network/vmispec"
+
+	"github.com/qinqon/kubevirt-passt-binding/pkg/link"
 )
 
 type NetworkConfiguratorOptions struct {
@@ -137,12 +141,19 @@ func (p PasstNetworkConfigurator) generateInterface() (*domainschema.Interface, 
 	if p.vmiSpecIface.ACPIIndex > 0 {
 		acpi = &domainschema.ACPI{Index: uint(p.vmiSpecIface.ACPIIndex)}
 	}
+	defaultGatwayLinks, err := link.DiscoverByDefaultGateway(vishnetlink.FAMILY_ALL)
+	if err != nil {
+		return nil, err
+	}
 
+	if len(defaultGatwayLinks) != 1 {
+		return nil, fmt.Errorf("unexpected number of default gw links")
+	}
+
+	podLink := defaultGatwayLinks[0]
 	const (
 		ifaceTypeUser     = "user"
 		ifaceBackendPasst = "passt"
-		//TODO: We should discover it
-		device = "sdn1"
 	)
 	return &domainschema.Interface{
 		Alias:       domainschema.NewUserDefinedAlias(p.vmiSpecIface.Name),
@@ -151,7 +162,7 @@ func (p PasstNetworkConfigurator) generateInterface() (*domainschema.Interface, 
 		MAC:         mac,
 		ACPI:        acpi,
 		Type:        ifaceTypeUser,
-		Source:      domainschema.InterfaceSource{Device: device},
+		Source:      domainschema.InterfaceSource{Device: podLink.Attrs().Name},
 		Backend:     &domainschema.InterfaceBackend{Type: ifaceBackendPasst, LogFile: PasstLogFilePath},
 		PortForward: p.generatePortForward(),
 	}, nil

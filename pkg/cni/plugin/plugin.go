@@ -32,6 +32,8 @@ import (
 
 	"github.com/qinqon/kubevirt-passt-binding/pkg/cni/plugin/netlink"
 	"github.com/qinqon/kubevirt-passt-binding/pkg/cni/plugin/sysctl"
+
+	"github.com/qinqon/kubevirt-passt-binding/pkg/link"
 )
 
 const (
@@ -102,10 +104,16 @@ func (c *cmd) CmdAddResult(args *skel.CmdArgs) (types.Result, error) {
 		netname := netConf.Args.Cni.LogicNetworkName
 		log.Printf("setup for logical network %s completed successfully", netname)
 
-		podLink, lerr := c.netlinkAdapter.ReadLink(primaryPodInterfaceName)
-		if lerr != nil {
-			return lerr
+		defaultGatwayLinks, err := link.DiscoverByDefaultGateway(vishnetlink.FAMILY_ALL)
+		if err != nil {
+			return err
 		}
+
+		if len(defaultGatwayLinks) != 1 {
+			return fmt.Errorf("unexpected number of default gw links")
+		}
+
+		podLink := defaultGatwayLinks[0]
 
 		result.Interfaces = append(result.Interfaces, &type100.Interface{
 			Name:    podLink.Attrs().Name,

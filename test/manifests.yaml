@@ -35,7 +35,7 @@ spec:
             "topology":"layer2",                                                
             "subnets": "10.100.200.0/24",                                       
             "mtu": 1300,                                                        
-            "primaryNetwork": true,
+            "role": "primary",
             "netAttachDefName": "passt-poc/ovn-layer2",                               
             "excludeSubnets": "10.100.200.0/29"                                 
     }                               
