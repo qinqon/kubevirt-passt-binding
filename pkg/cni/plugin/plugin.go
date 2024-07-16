@@ -115,11 +115,21 @@ func (c *cmd) CmdAddResult(args *skel.CmdArgs) (types.Result, error) {
 
 		podLink := defaultGatwayLinks[0]
 
+		addrs, err := vishnetlink.AddrList(podLink, vishnetlink.FAMILY_ALL)
+		if err != nil {
+			return err
+		}
+
 		result.Interfaces = append(result.Interfaces, &type100.Interface{
 			Name:    podLink.Attrs().Name,
 			Mac:     podLink.Attrs().HardwareAddr.String(),
 			Sandbox: c.netns.Path(),
 		})
+		for _, addr := range addrs {
+			result.IPs = append(result.IPs, &type100.IPConfig{
+				Address: *addr.IPNet,
+			})
+		}
 		return nil
 	})
 	if err != nil {
