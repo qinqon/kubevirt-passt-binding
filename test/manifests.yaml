@@ -77,7 +77,8 @@ spec:
             memory: 1024M
       networks:
       - name: passtnet
-        pod: {}
+        multus: 
+          networkName: netbindingpasst
       terminationGracePeriodSeconds: 0
       volumes:
       - containerDisk:
