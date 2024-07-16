@@ -121,7 +121,7 @@ func (c *cmd) CmdAddResult(args *skel.CmdArgs) (types.Result, error) {
 		}
 
 		result.Interfaces = append(result.Interfaces, &type100.Interface{
-			Name:    podLink.Attrs().Name,
+			Name:    args.IfName,
 			Mac:     podLink.Attrs().HardwareAddr.String(),
 			Sandbox: c.netns.Path(),
 		})
