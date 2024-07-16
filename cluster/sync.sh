@@ -14,6 +14,20 @@ kubectl patch kubevirts -n kubevirt kubevirt --type=json -p="[{\"op\": \"add\", 
       }
   }}]"
 
+kubectl apply -f - <<EOF
+---
+apiVersion: kubevirt.io/v1
+kind: KubeVirt
+metadata:
+  name: kubevirt
+  namespace: kubevirt
+spec:
+  configuration:
+    developerConfiguration:
+      featureGates:
+        - NetworkBindingPlugins
+EOF
+
 for node in $(kubectl get node --no-headers  -o custom-columns=":metadata.name"); do
     docker cp ./kubevirt-passt-binding $node:/opt/cni/bin/kubevirt-passt-binding
 done
