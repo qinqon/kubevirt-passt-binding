@@ -36,8 +36,7 @@ spec:
             "subnets": "10.100.200.0/24",                                       
             "mtu": 1300,                                                        
             "role": "primary",
-            "netAttachDefName": "passt-poc/ovn-layer2",                               
-            "excludeSubnets": "10.100.200.0/29"                                 
+            "netAttachDefName": "passt-poc/ovn-layer2"                              
     }                               
 ---
 apiVersion: kubevirt.io/v1
