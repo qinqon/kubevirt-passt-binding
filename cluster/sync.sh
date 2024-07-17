@@ -6,6 +6,7 @@ kubectl patch kubevirts -n kubevirt kubevirt --type=json -p="[{\"op\": \"add\", 
       \"binding\": {
           \"passt\": {
               \"sidecarImage\": \"${sidecar_image}@${sidecar_image_sha}\",
+              \"downwardAPI\": \"device-info\",
               \"migration\": {
                   \"method\": \"link-refresh\"
               }

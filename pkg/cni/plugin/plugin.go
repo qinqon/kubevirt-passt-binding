@@ -117,8 +117,15 @@ func (c *cmd) CmdAddResult(args *skel.CmdArgs) (types.Result, error) {
 			return err
 		}
 
+		dummyLink := &vishnetlink.Dummy{LinkAttrs: vishnetlink.LinkAttrs{
+			Name: args.IfName,
+		}}
+		if err := vishnetlink.LinkAdd(dummyLink); err != nil {
+			return err
+		}
+
 		result.Interfaces = append(result.Interfaces, &type100.Interface{
-			Name:    args.IfName,
+			Name:    podLink.Attrs().Name,
 			Mac:     podLink.Attrs().HardwareAddr.String(),
 			Sandbox: c.netns.Path(),
 		})
@@ -126,6 +133,10 @@ func (c *cmd) CmdAddResult(args *skel.CmdArgs) (types.Result, error) {
 			result.IPs = append(result.IPs, &type100.IPConfig{
 				Address: *addr.IPNet,
 			})
+			addr.Label = ""
+			if err := vishnetlink.AddrAdd(dummyLink, &addr); err != nil {
+				return err
+			}
 		}
 		return nil
 	})
